@@ -5,18 +5,22 @@ from PIL import Image
 
 
 
-model_path = 'C:\\Users\\Asus\\Downloads\\DS\\qda_model.sav'
-header_image_path = "C:\\Users\\Asus\\Downloads\\DS\\class_header.jpg"
+# model_path = 'C:\\Users\\Asus\\Downloads\\DS\\qda_model.sav'
+# header_image_path = "C:\\Users\\Asus\\Downloads\\DS\\class_header.jpg"
 
 
 # Load your trained model (ensure the model is saved as 'model.pkl')
-with open(model_path, 'rb') as file:
-    qda_model = pickle.load(file)
+# with open(qda.model, 'rb') as file:
+#     qda_model = pickle.load(file)
+
+filename = 'qda_model.sav'
+class_header = 'class_header.jpg'
+qda_model = pickle.load(open(filename, 'rb'))
 
 # Define the app
 st.title("Binary Classification with QDA")
 
-image = Image.open(header_image_path)
+image = Image.open(class_header)
 st.image(image, use_column_width=True)
 
 # Input features
