@@ -1,3 +1,12 @@
 streamlit
 pandas
+scikit-learn
+numpy
 Pillow
+matplotlib
+seaborn
+flask
+gunicorn
+requests
+pytest
+
