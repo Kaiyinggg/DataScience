@@ -88,19 +88,29 @@ if options == "Trends":
             #lambda row: f"({row[variable1]},{row[variable2]})", axis=1)
             lambda row: f"({variable1}={row[variable1]}, {variable2}={row[variable2]})", axis=1)
         
+        data_for_line_plot['HoverText'] = data_for_line_plot.apply(
+            lambda row: f"{row['Combination']}, Count={row['Count']}", axis=1)
         # Sort by combination for plotting
         data_for_line_plot = data_for_line_plot.sort_values(by="Combination")
         
         # Create a line plot with Plotly Graph Objects
         fig_line = go.Figure()
     
-        fig_line.add_trace(go.Scatter(x=data_for_line_plot['Combination'], 
-                                     y=data_for_line_plot['Count'], 
-                                     mode='lines+markers', 
-                                     name='Combination Counts',
-                                     line=dict(width=2),
-                                     text=data_for_line_plot['Combination'], 
-                                     hoverinfo='text'))
+        # fig_line.add_trace(go.Scatter(x=data_for_line_plot['Combination'], 
+        #                              y=data_for_line_plot['Count'], 
+        #                              mode='lines+markers', 
+        #                              name='Combination Counts',
+        #                              line=dict(width=2),
+        #                              text=data_for_line_plot['Combination'], 
+        #                              hoverinfo='text'))
+
+        fig_line.add_trace(go.Scatter(x=data_for_line_plot.index, 
+                                 y=data_for_line_plot['Count'], 
+                                 mode='lines+markers', 
+                                 name='Combination Counts',
+                                 line=dict(width=2),
+                                 text=data_for_line_plot['HoverText'],  # Hover data with count
+                                 hoverinfo='text'))  # Display the 'text' when hovering
     
         # Update the layout for better presentation
         fig_line.update_layout(
