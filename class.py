@@ -21,7 +21,7 @@ qda_model = pickle.load(open(filename, 'rb'))
 st.title("Binary Classification with QDA")
 
 image = Image.open(class_header)
-st.image(image, use_column_width=True)
+st.image(image, use_container_width=True)
 
 # Input features
 st.header("Input Features")
