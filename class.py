@@ -53,12 +53,7 @@ trend_cols = ['USB_Trend', 'OF_Trend', 'OS_Trend', 'PLD_Trend', 'SF_Trend', 'PLT
 #     st.plotly_chart(fig)
 
 if options == "Trends":
-    st.header("Binary Trend Variables Stacked Bar Plot")
-
-    # Debugging: Check available columns
-    st.write("Available columns in the DataFrame:")
-    st.write(df2.columns)
-
+    st.header("Trend Variables Analysis")
     # Let the user select two variables to compare
     variable1 = st.selectbox("Select the first trend variable:", df2.columns)
     variable2 = st.selectbox("Select the second trend variable:", df2.columns)
@@ -68,7 +63,8 @@ if options == "Trends":
         st.error("Please select two different variables to compare.")
     else:
         # Show the relationship between the two selected variables
-        st.subheader(f"Relationship between {variable1} and {variable2}")
+        
+        st.subheader(f"Stacked Bar Plot relationship between {variable1} and {variable2}")
 
         pairwise_counts = pd.crosstab(df2[variable1], df2[variable2])
 
@@ -80,6 +76,39 @@ if options == "Trends":
     
         # Display the plot
         st.plotly_chart(fig)
+        pairwise_counts = pd.crosstab(df2[variable1], df2[variable2])
+
+
+        
+        # Prepare the data for the line plot
+        data_for_line_plot = pairwise_counts.stack().reset_index(name="Count")
+        
+        # Generate the x-axis labels for the combinations (0, 0), (0, 1), (1, 0), (1, 1)
+        data_for_line_plot['Combination'] = data_for_line_plot.apply(
+            lambda row: f"({row[variable1]},{row[variable2]})", axis=1)
+        
+        # Sort by combination for plotting
+        data_for_line_plot = data_for_line_plot.sort_values(by="Combination")
+        
+        # Create a line plot with Plotly Graph Objects
+        fig_line = go.Figure()
+    
+        fig_line.add_trace(go.Scatter(x=data_for_line_plot['Combination'], 
+                                     y=data_for_line_plot['Count'], 
+                                     mode='lines+markers', 
+                                     name='Combination Counts',
+                                     line=dict(width=2)))
+    
+        # Update the layout for better presentation
+        fig_line.update_layout(
+            title=f"Line Graph of Counts for {variable1} vs {variable2}",
+            xaxis_title="Binary Combination",
+            yaxis_title="Count",
+            showlegend=True
+        )
+    
+        # Display the line graph
+        st.plotly_chart(fig_line)
 
 # 2. **Visualize USDI Price and Volume** 
 elif options == "Price & Volume":
