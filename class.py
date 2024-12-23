@@ -49,11 +49,11 @@ if options == "Trends":
         fig = go.Figure()
 
         fig.add_trace(go.Scatter(
-            x=df[variable1],
-            y=df[variable2],
+            x=df2[variable1],
+            y=df2[variable2],
             mode='markers',
             marker=dict(size=10, color='blue', opacity=0.7),
-            text=df.index,  # Hover information (index of the data points)
+            text=df2.index,  # Hover information (index of the data points)
             name=f'{variable1} vs {variable2}'
         ))
 
