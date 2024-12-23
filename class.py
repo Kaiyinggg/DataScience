@@ -5,6 +5,7 @@ from PIL import Image
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
+import plotly.graph_objects as go
 
 filename = 'qda_model.sav'
 class_header = 'class_header.jpg'
