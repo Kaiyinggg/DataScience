@@ -10,9 +10,9 @@ import plotly.express as px
 from streamlit_option_menu import option_menu
 
 filename = 'qda_model.sav'
-class_header = "class_header.jpg"
-trend = "Trend.csv"
-USDI = "USDI.csv"
+class_header = 'class_header.jpg'
+trend = 'Trend.csv'
+USDI = 'USDI.csv'
 
 
 qda_model = pickle.load(open(filename, 'rb'))
