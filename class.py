@@ -40,16 +40,6 @@ if options == "Trends":
     st.write("Trend Data Types:")
     st.write(trend_data.dtypes)
     
-    # Check for NaN or infinite values and handle them
-    if trend_data.isna().sum().sum() > 0:
-        st.write(f"Warning: Found {trend_data.isna().sum().sum()} missing (NaN) values in the trend data.")
-        trend_data = trend_data.dropna()  # Drop rows with NaN values
-
-    if np.isinf(trend_data.values).sum() > 0:
-        st.write("Warning: Found infinite values in the trend data.")
-        trend_data.replace([np.inf, -np.inf], np.nan, inplace=True)  # Replace inf with NaN
-        trend_data = trend_data.dropna()  # Drop rows with NaN values after replacing inf
-    
     # Debugging: Check the first few rows of the cleaned data
     st.write("Cleaned Trend Data Sample:")
     st.write(trend_data.head())
@@ -59,13 +49,14 @@ if options == "Trends":
         st.error("The trend data is empty after cleaning (NaN/infinite values removed).")
     else:
         # Plot the trends over time for each trend variable
-        try:
+       try:
             st.subheader("Trend Variables Plot")
-            trend_data.plot(kind='line', figsize=(10, 6), marker='o')
-            plt.title("Trend Variables Over Time")
-            plt.xlabel("Index")
-            plt.ylabel("Trend Value")
-            st.pyplot()
+            fig, ax = plt.subplots(figsize=(10, 6))
+            trend_data.plot(kind='line', marker='o', ax=ax)
+            ax.set_title("Trend Variables Over Time")
+            ax.set_xlabel("Index")
+            ax.set_ylabel("Trend Value")
+            st.pyplot(fig)
         except Exception as e:
             st.error(f"Error while plotting: {str(e)}")
 
