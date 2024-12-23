@@ -34,7 +34,7 @@ if options == "Trends":
     # List of trend columns from your dataset
     
     # Convert trend columns to numeric (if not already)
-    trend_data = df[trend_cols].apply(pd.to_numeric, errors='coerce')
+    trend_data = df2[trend_cols].apply(pd.to_numeric, errors='coerce')
 
     # Debugging: Check the data types after conversion
     st.write("Trend Data Types:")
