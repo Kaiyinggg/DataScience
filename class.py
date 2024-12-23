@@ -85,7 +85,8 @@ if options == "Trends":
         
         # Generate the x-axis labels for the combinations (0, 0), (0, 1), (1, 0), (1, 1)
         data_for_line_plot['Combination'] = data_for_line_plot.apply(
-            lambda row: f"({row[variable1]},{row[variable2]})", axis=1)
+            #lambda row: f"({row[variable1]},{row[variable2]})", axis=1)
+            lambda row: f"({selected_trend_1}={row[selected_trend_1]}, {selected_trend_2}={row[selected_trend_2]})", axis=1)
         
         # Sort by combination for plotting
         data_for_line_plot = data_for_line_plot.sort_values(by="Combination")
