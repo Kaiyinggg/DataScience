@@ -2,6 +2,9 @@ import streamlit as st
 import pandas as pd
 import pickle  # For loading saved models
 from PIL import Image
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 filename = 'qda_model.sav'
 class_header = 'class_header.jpg'
