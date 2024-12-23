@@ -48,23 +48,30 @@ trend_cols = ['USB_Trend', 'OF_Trend', 'OS_Trend', 'PLD_Trend', 'SF_Trend', 'PLT
 #     st.pyplot()
 
 if options == "Trends":
-    st.header("Trend Variables Over Time")
+    st.header("Interactive Trend Variables Over Time")
 
     # Convert trend columns to numeric (if not already)
     trend_data = df2[trend_cols].apply(pd.to_numeric, errors='coerce')
 
-    # Plot each trend in a separate subplot
-    fig, axes = plt.subplots(nrows=7, ncols=1, figsize=(10, 18))  # 7 trends, 1 column
-    fig.tight_layout(pad=5.0)
+    # Handle NaNs by filling with the mean
+    trend_data = trend_data.fillna(trend_data.mean())
 
-    for i, column in enumerate(trend_cols):
-        axes[i].plot(trend_data.index, trend_data[column], marker='o', label=column)
-        axes[i].set_title(f'{column} Over Time')
-        axes[i].set_xlabel("Index")
-        axes[i].set_ylabel("Trend Value")
-        axes[i].legend(loc='best')
+    # Create an interactive plotly figure
+    fig = go.Figure()
 
-    st.pyplot(fig)
+    for column in trend_data.columns:
+        fig.add_trace(go.Scatter(x=trend_data.index, y=trend_data[column], mode='lines+markers', name=column))
+
+    # Customize the layout
+    fig.update_layout(
+        title="Interactive Trend Variables Over Time",
+        xaxis_title="Index",
+        yaxis_title="Trend Value",
+        hovermode="closest"
+    )
+
+    # Display the plot
+    st.plotly_chart(fig)
 
 # 2. **Visualize USDI Price and Volume** 
 elif options == "Price & Volume":
@@ -102,7 +109,7 @@ elif options == "Correlation Matrix":
     st.header("Correlation Between Variables")
     
     # Select numerical columns for correlation
-    correlation_cols = ['USDI_Price', 'USDI_Open', 'USDI_High', 'USDI_Low', 'USDI_Volume', 'USDI_Trend']
+    correlation_cols = ['USDI_Price', 'USDI_Open', 'USDI_High', 'USDI_Low', 'USDI_Volume']
     correlation_data = df[correlation_cols]
     
     # Calculate and display correlation matrix
