@@ -31,48 +31,46 @@ trend_cols = ['USB_Trend', 'OF_Trend', 'OS_Trend', 'PLD_Trend', 'SF_Trend', 'PLT
 # 1. **Visualize Trends** (based on the trend variables)
 
 
-# if options == "Trends":
-#     st.header("Trend Variables Over Time")
-
-#     # List of trend columns from your dataset
-#     trend_data = df2[trend_cols].apply(pd.to_numeric, errors='coerce')
-    
-#     st.write("Trend Data:")
-#     st.write(trend_data)
-    
-#     # Plot the trends over time for each trend variable
-#     st.subheader("Trend Variables Plot")
-#     trend_data.plot(kind='line', figsize=(10, 6), marker='o')
-#     plt.title("Trend Variables Over Time")
-#     plt.xlabel("Index")
-#     plt.ylabel("Trend Value")
-#     st.pyplot()
-
 if options == "Trends":
-    st.header("Interactive Trend Variables Over Time")
+    st.header("Interactive Relationship Diagram for Trend Variables")
 
-    # Convert trend columns to numeric (if not already)
-    trend_data = df2[trend_cols].apply(pd.to_numeric, errors='coerce')
+    # Let the user select two variables to compare
+    variable1 = st.selectbox("Select the first trend variable:", df2.columns)
+    variable2 = st.selectbox("Select the second trend variable:", df2.columns)
 
-    # Handle NaNs by filling with the mean
-    trend_data = trend_data.fillna(trend_data.mean())
+    # Check if user selects the same variable for both
+    if variable1 == variable2:
+        st.error("Please select two different variables to compare.")
+    else:
+        # Show the relationship between the two selected variables
+        st.subheader(f"Relationship between {variable1} and {variable2}")
 
-    # Create an interactive plotly figure
-    fig = go.Figure()
+        # Plot the scatter plot using Plotly
+        fig = go.Figure()
 
-    for column in trend_data.columns:
-        fig.add_trace(go.Scatter(x=trend_data.index, y=trend_data[column], mode='lines+markers', name=column))
+        fig.add_trace(go.Scatter(
+            x=df[variable1],
+            y=df[variable2],
+            mode='markers',
+            marker=dict(size=10, color='blue', opacity=0.7),
+            text=df.index,  # Hover information (index of the data points)
+            name=f'{variable1} vs {variable2}'
+        ))
 
-    # Customize the layout
-    fig.update_layout(
-        title="Interactive Trend Variables Over Time",
-        xaxis_title="Index",
-        yaxis_title="Trend Value",
-        hovermode="closest"
-    )
+        fig.update_layout(
+            title=f"Relationship between {variable1} and {variable2}",
+            xaxis_title=variable1,
+            yaxis_title=variable2,
+            hovermode="closest",
+            template="plotly_dark"
+        )
 
-    # Display the plot
-    st.plotly_chart(fig)
+        # Display the plot
+        st.plotly_chart(fig)
+
+        # Optionally, show the correlation coefficient between the selected variables
+        correlation = df[variable1].corr(df[variable2])
+        st.write(f"Correlation between {variable1} and {variable2}: {correlation:.2f}")
 
 # 2. **Visualize USDI Price and Volume** 
 elif options == "Price & Volume":
