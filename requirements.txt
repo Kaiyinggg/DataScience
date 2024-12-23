@@ -10,3 +10,4 @@ gunicorn
 requests
 pytest
 plotly
+streamlit-option-menu
