@@ -85,8 +85,8 @@ if options == "Trends":
         
         # Generate the x-axis labels for the combinations (0, 0), (0, 1), (1, 0), (1, 1)
         data_for_line_plot['Combination'] = data_for_line_plot.apply(
-            #lambda row: f"({row[variable1]},{row[variable2]})", axis=1)
-            lambda row: f"({variable1}={row[variable1]}, {variable2}={row[variable2]})", axis=1)
+            lambda row: f"({row[variable1]},{row[variable2]})", axis=1)
+            #lambda row: f"({variable1}={row[variable1]}, {variable2}={row[variable2]})", axis=1)
         
         # Sort by combination for plotting
         data_for_line_plot = data_for_line_plot.sort_values(by="Combination")
@@ -98,7 +98,9 @@ if options == "Trends":
                                      y=data_for_line_plot['Count'], 
                                      mode='lines+markers', 
                                      name='Combination Counts',
-                                     line=dict(width=2)))
+                                     line=dict(width=2),
+                                     text=data_for_line_plot['Combination'], 
+                                     hoverinfo='text'))
     
         # Update the layout for better presentation
         fig_line.update_layout(
