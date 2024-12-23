@@ -34,10 +34,15 @@ if options == "Trends":
     # List of trend columns from your dataset
     trend_cols = [col for col in df.columns if 'Trend' in col and col != 'USDI_Trend']
     
-    trend_data = df[trend_cols]
-    st.write("Trend Data:")
-    st.write(trend_data)
+    # Ensure the trend columns are numeric (0 and 1)
+    trend_data = df[trend_cols].apply(pd.to_numeric, errors='coerce')
     
+    # Check the data types (for debugging)
+    st.write(trend_data.dtypes)
+    
+    # Drop rows with NaN values (if any)
+    trend_data = trend_data.dropna()
+
     # Plot the trends over time for each trend variable
     st.subheader("Trend Variables Plot")
     trend_data.plot(kind='line', figsize=(10, 6), marker='o')
