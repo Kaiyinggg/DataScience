@@ -33,24 +33,53 @@ trend_cols = ['USB_Trend', 'OF_Trend', 'OS_Trend', 'PLD_Trend', 'SF_Trend', 'PLT
 # 1. **Visualize Trends** (based on the trend variables)
 
 
+# if options == "Trends":
+#     st.header("Binary Trend Variables Stacked Bar Plot")
+
+#     # Show the list of trend variables
+#     st.write("Trend Variables:", df2.columns)
+
+#     # Create a stacked bar plot for pairwise combinations
+#     # Pivot the data for binary trend pairs
+#     pairwise_counts = pd.crosstab(df2['USDI_Trend'], df2['EU_Trend'])
+
+#     # Plot as stacked bar chart
+#     fig = px.bar(pairwise_counts, 
+#                  barmode='stack', 
+#                  labels={'USB_Trend': 'USDI Trend', 'EU_Trend': 'OF Trend'},
+#                  title="Stacked Bar Plot of USDI_Trend vs EU_Trend")
+
+#     # Display the plot
+#     st.plotly_chart(fig)
+
 if options == "Trends":
     st.header("Binary Trend Variables Stacked Bar Plot")
 
-    # Show the list of trend variables
-    st.write("Trend Variables:", df2.columns)
+    # Debugging: Check available columns
+    st.write("Available columns in the DataFrame:")
+    st.write(df2.columns)
 
-    # Create a stacked bar plot for pairwise combinations
-    # Pivot the data for binary trend pairs
-    pairwise_counts = pd.crosstab(df2['USDI_Trend'], df2['EU_Trend'])
+    # Let the user select two variables to compare
+    variable1 = st.selectbox("Select the first trend variable:", df2.columns)
+    variable2 = st.selectbox("Select the second trend variable:", df2.columns)
 
-    # Plot as stacked bar chart
-    fig = px.bar(pairwise_counts, 
-                 barmode='stack', 
-                 labels={'USB_Trend': 'USDI Trend', 'EU_Trend': 'OF Trend'},
-                 title="Stacked Bar Plot of USDI_Trend vs EU_Trend")
+    # Check if user selects the same variable for both
+    if variable1 == variable2:
+        st.error("Please select two different variables to compare.")
+    else:
+        # Show the relationship between the two selected variables
+        st.subheader(f"Relationship between {variable1} and {variable2}")
 
-    # Display the plot
-    st.plotly_chart(fig)
+        pairwise_counts = pd.crosstab(df2[variable1], df2[variable2])
+
+        # Plot the data as a stacked bar chart
+        fig = px.bar(pairwise_counts, 
+                     barmode='stack', 
+                     labels={variable1: variable1, variable2: variable2},
+                     title=f"Stacked Bar Plot of {variable1} vs {variable2}")
+    
+        # Display the plot
+        st.plotly_chart(fig)
 
 # 2. **Visualize USDI Price and Volume** 
 elif options == "Price & Volume":
