@@ -3,19 +3,10 @@ import pandas as pd
 import pickle  # For loading saved models
 from PIL import Image
 
-
-
-# model_path = 'C:\\Users\\Asus\\Downloads\\DS\\qda_model.sav'
-# header_image_path = "C:\\Users\\Asus\\Downloads\\DS\\class_header.jpg"
-
-
-# Load your trained model (ensure the model is saved as 'model.pkl')
-# with open(qda.model, 'rb') as file:
-#     qda_model = pickle.load(file)
-
 filename = 'qda_model.sav'
 class_header = 'class_header.jpg'
 qda_model = pickle.load(open(filename, 'rb'))
+
 
 # Define the app
 st.title("Binary Classification with QDA")
@@ -23,6 +14,11 @@ st.title("Binary Classification with QDA")
 image = Image.open(class_header)
 st.image(image, use_container_width=True)
 
+
+with st.expandaer('Data'):
+    st.write('**Raw Data**')
+    df = pd.read_csv('Trend.csv')
+    
 # Input features
 st.header("Input Features")
 USB_Trend = st.selectbox("USB_Trend", [0, 1], help="Choose 0 or 1")
