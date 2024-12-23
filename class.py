@@ -32,45 +32,23 @@ trend_cols = ['USB_Trend', 'OF_Trend', 'OS_Trend', 'PLD_Trend', 'SF_Trend', 'PLT
 
 
 if options == "Trends":
-    st.header("Interactive Relationship Diagram for Trend Variables")
+    st.header("Binary Trend Variables Stacked Bar Plot")
 
-    # Let the user select two variables to compare
-    variable1 = st.selectbox("Select the first trend variable:", df2.columns)
-    variable2 = st.selectbox("Select the second trend variable:", df2.columns)
+    # Show the list of trend variables
+    st.write("Trend Variables:", df2.columns)
 
-    # Check if user selects the same variable for both
-    if variable1 == variable2:
-        st.error("Please select two different variables to compare.")
-    else:
-        # Show the relationship between the two selected variables
-        st.subheader(f"Relationship between {variable1} and {variable2}")
+    # Create a stacked bar plot for pairwise combinations
+    # Pivot the data for binary trend pairs
+    pairwise_counts = pd.crosstab(df2['USDI_Trend'], df2['EU_Trend'])
 
-        # Plot the scatter plot using Plotly
-        fig = go.Figure()
+    # Plot as stacked bar chart
+    fig = px.bar(pairwise_counts, 
+                 barmode='stack', 
+                 labels={'USB_Trend': 'USDI Trend', 'EU_Trend': 'OF Trend'},
+                 title="Stacked Bar Plot of USDI_Trend vs EU_Trend")
 
-        fig.add_trace(go.Scatter(
-            x=df2[variable1],
-            y=df2[variable2],
-            mode='markers',
-            marker=dict(size=10, color='blue', opacity=0.7),
-            text=df2.index,  # Hover information (index of the data points)
-            name=f'{variable1} vs {variable2}'
-        ))
-
-        fig.update_layout(
-            title=f"Relationship between {variable1} and {variable2}",
-            xaxis_title=variable1,
-            yaxis_title=variable2,
-            hovermode="closest",
-            template="plotly_dark"
-        )
-
-        # Display the plot
-        st.plotly_chart(fig)
-
-        # Optionally, show the correlation coefficient between the selected variables
-        correlation = df2[variable1].corr(df2[variable2])
-        st.write(f"Correlation between {variable1} and {variable2}: {correlation:.2f}")
+    # Display the plot
+    st.plotly_chart(fig)
 
 # 2. **Visualize USDI Price and Volume** 
 elif options == "Price & Volume":
