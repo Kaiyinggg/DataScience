@@ -31,8 +31,6 @@ trend_cols = ['USB_Trend', 'OF_Trend', 'OS_Trend', 'PLD_Trend', 'SF_Trend', 'PLT
 if options == "Trends":
     st.header("Trend Variables Over Time")
 
-    # List of trend columns from your dataset
-    
     # Convert trend columns to numeric (if not already)
     trend_data = df2[trend_cols].apply(pd.to_numeric, errors='coerce')
 
@@ -48,14 +46,31 @@ if options == "Trends":
     if trend_data.empty:
         st.error("The trend data is empty after cleaning (NaN/infinite values removed).")
     else:
+        # Check for NaN values in the trend data (after conversion)
+        nan_count = trend_data.isna().sum()
+        st.write(f"NaN values in each column:\n{nan_count}")
+        
+        # If there are NaN values, handle them by filling with the mean (or another method)
+        if nan_count.any():
+            trend_data = trend_data.fillna(trend_data.mean())
+            st.write("NaN values were filled with the mean of each column.")
+        
         # Plot the trends over time for each trend variable
-       try:
+        try:
             st.subheader("Trend Variables Plot")
+            
+            # Create the figure and axis explicitly
             fig, ax = plt.subplots(figsize=(10, 6))
+            
+            # Plot the trend data
             trend_data.plot(kind='line', marker='o', ax=ax)
+            
+            # Customize the plot (title, labels, etc.)
             ax.set_title("Trend Variables Over Time")
             ax.set_xlabel("Index")
             ax.set_ylabel("Trend Value")
+            
+            # Display the plot in the Streamlit app
             st.pyplot(fig)
         except Exception as e:
             st.error(f"Error while plotting: {str(e)}")
