@@ -18,7 +18,7 @@ st.image(image, use_container_width=True)
 with st.expander('Data'):
     st.write('**Raw Data**')
     df = pd.read_csv('Trend.csv')
-    
+    df
 # Input features
 st.header("Input Features")
 USB_Trend = st.selectbox("USB_Trend", [0, 1], help="Choose 0 or 1")
