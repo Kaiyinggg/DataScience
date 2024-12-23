@@ -69,7 +69,7 @@ if options == "Trends":
         st.plotly_chart(fig)
 
         # Optionally, show the correlation coefficient between the selected variables
-        correlation = df[variable1].corr(df[variable2])
+        correlation = df2[variable1].corr(df2[variable2])
         st.write(f"Correlation between {variable1} and {variable2}: {correlation:.2f}")
 
 # 2. **Visualize USDI Price and Volume** 
