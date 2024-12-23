@@ -34,22 +34,41 @@ if options == "Trends":
     # List of trend columns from your dataset
     trend_cols = [col for col in df.columns if 'Trend' in col and col != 'USDI_Trend']
     
-    # Ensure the trend columns are numeric (0 and 1)
+    # Convert trend columns to numeric (if not already)
     trend_data = df[trend_cols].apply(pd.to_numeric, errors='coerce')
-    
-    # Check the data types (for debugging)
+
+    # Debugging: Check the data types after conversion
+    st.write("Trend Data Types:")
     st.write(trend_data.dtypes)
     
-    # Drop rows with NaN values (if any)
-    trend_data = trend_data.dropna()
+    # Check for NaN or infinite values and handle them
+    if trend_data.isna().sum().sum() > 0:
+        st.write(f"Warning: Found {trend_data.isna().sum().sum()} missing (NaN) values in the trend data.")
+        trend_data = trend_data.dropna()  # Drop rows with NaN values
 
-    # Plot the trends over time for each trend variable
-    st.subheader("Trend Variables Plot")
-    trend_data.plot(kind='line', figsize=(10, 6), marker='o')
-    plt.title("Trend Variables Over Time")
-    plt.xlabel("Index")
-    plt.ylabel("Trend Value")
-    st.pyplot()
+    if np.isinf(trend_data.values).sum() > 0:
+        st.write("Warning: Found infinite values in the trend data.")
+        trend_data.replace([np.inf, -np.inf], np.nan, inplace=True)  # Replace inf with NaN
+        trend_data = trend_data.dropna()  # Drop rows with NaN values after replacing inf
+    
+    # Debugging: Check the first few rows of the cleaned data
+    st.write("Cleaned Trend Data Sample:")
+    st.write(trend_data.head())
+
+    # Ensure trend_data is not empty
+    if trend_data.empty:
+        st.error("The trend data is empty after cleaning (NaN/infinite values removed).")
+    else:
+        # Plot the trends over time for each trend variable
+        try:
+            st.subheader("Trend Variables Plot")
+            trend_data.plot(kind='line', figsize=(10, 6), marker='o')
+            plt.title("Trend Variables Over Time")
+            plt.xlabel("Index")
+            plt.ylabel("Trend Value")
+            st.pyplot()
+        except Exception as e:
+            st.error(f"Error while plotting: {str(e)}")
 
 # 2. **Visualize USDI Price and Volume** 
 elif options == "Price & Volume":
