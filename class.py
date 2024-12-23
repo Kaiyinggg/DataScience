@@ -15,7 +15,7 @@ image = Image.open(class_header)
 st.image(image, use_container_width=True)
 
 
-with st.expandaer('Data'):
+with st.expander('Data'):
     st.write('**Raw Data**')
     df = pd.read_csv('Trend.csv')
     
