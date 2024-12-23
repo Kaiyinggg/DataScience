@@ -28,69 +28,43 @@ st.sidebar.header("Choose a View")
 options = st.sidebar.radio("Choose the type of chart:", ["Trends", "Price & Volume", "Correlation Matrix"])
 trend_cols = ['USB_Trend', 'OF_Trend', 'OS_Trend', 'PLD_Trend', 'SF_Trend', 'PLT_Trend', 'EU_Trend']
 # 1. **Visualize Trends** (based on the trend variables)
+
+
 # if options == "Trends":
 #     st.header("Trend Variables Over Time")
 
-#     # Convert trend columns to numeric (if not already)
+#     # List of trend columns from your dataset
 #     trend_data = df2[trend_cols].apply(pd.to_numeric, errors='coerce')
-
-#     # Debugging: Check the data types after conversion
-#     st.write("Trend Data Types:")
-#     st.write(trend_data.dtypes)
     
-#     # Debugging: Check the first few rows of the cleaned data
-#     st.write("Cleaned Trend Data Sample:")
-#     st.write(trend_data.head())
-
-#     # Ensure trend_data is not empty
-#     if trend_data.empty:
-#         st.error("The trend data is empty after cleaning (NaN/infinite values removed).")
-#     else:
-#         # Check for NaN values in the trend data (after conversion)
-#         nan_count = trend_data.isna().sum()
-#         st.write(f"NaN values in each column:\n{nan_count}")
-        
-#         # If there are NaN values, handle them by filling with the mean (or another method)
-#         if nan_count.any():
-#             trend_data = trend_data.fillna(trend_data.mean())
-#             st.write("NaN values were filled with the mean of each column.")
-        
-#         # Plot the trends over time for each trend variable
-#         try:
-#             st.subheader("Trend Variables Plot")
-            
-#             # Create the figure and axis explicitly
-#             fig, ax = plt.subplots(figsize=(10, 6))
-            
-#             # Plot the trend data
-#             trend_data.plot(kind='line', marker='o', ax=ax)
-            
-#             # Customize the plot (title, labels, etc.)
-#             ax.set_title("Trend Variables Over Time")
-#             ax.set_xlabel("Index")
-#             ax.set_ylabel("Trend Value")
-            
-#             # Display the plot in the Streamlit app
-#             st.pyplot(fig)
-#         except Exception as e:
-#             st.error(f"Error while plotting: {str(e)}")
+#     st.write("Trend Data:")
+#     st.write(trend_data)
+    
+#     # Plot the trends over time for each trend variable
+#     st.subheader("Trend Variables Plot")
+#     trend_data.plot(kind='line', figsize=(10, 6), marker='o')
+#     plt.title("Trend Variables Over Time")
+#     plt.xlabel("Index")
+#     plt.ylabel("Trend Value")
+#     st.pyplot()
 
 if options == "Trends":
     st.header("Trend Variables Over Time")
 
-    # List of trend columns from your dataset
+    # Convert trend columns to numeric (if not already)
     trend_data = df2[trend_cols].apply(pd.to_numeric, errors='coerce')
-    
-    st.write("Trend Data:")
-    st.write(trend_data)
-    
-    # Plot the trends over time for each trend variable
-    st.subheader("Trend Variables Plot")
-    trend_data.plot(kind='line', figsize=(10, 6), marker='o')
-    plt.title("Trend Variables Over Time")
-    plt.xlabel("Index")
-    plt.ylabel("Trend Value")
-    st.pyplot()
+
+    # Plot each trend in a separate subplot
+    fig, axes = plt.subplots(nrows=7, ncols=1, figsize=(10, 18))  # 7 trends, 1 column
+    fig.tight_layout(pad=5.0)
+
+    for i, column in enumerate(trend_cols):
+        axes[i].plot(trend_data.index, trend_data[column], marker='o', label=column)
+        axes[i].set_title(f'{column} Over Time')
+        axes[i].set_xlabel("Index")
+        axes[i].set_ylabel("Trend Value")
+        axes[i].legend(loc='best')
+
+    st.pyplot(fig)
 
 # 2. **Visualize USDI Price and Volume** 
 elif options == "Price & Volume":
@@ -128,7 +102,7 @@ elif options == "Correlation Matrix":
     st.header("Correlation Between Variables")
     
     # Select numerical columns for correlation
-    correlation_cols = ['USDI_Price', 'USDI_Open', 'USDI_High', 'USDI_Low', 'USDI_Volume']
+    correlation_cols = ['USDI_Price', 'USDI_Open', 'USDI_High', 'USDI_Low', 'USDI_Volume', 'USDI_Trend']
     correlation_data = df[correlation_cols]
     
     # Calculate and display correlation matrix
