@@ -32,7 +32,7 @@ if options == "Trends":
     st.header("Trend Variables Over Time")
 
     # List of trend columns from your dataset
-    trend_cols = [col for col in df.columns if 'Trend' in col and col != 'USDI_Trend']
+    trend_cols = ['USB_Trend', 'OF_Trend', 'OS_Trend', 'PLD_Trend', 'SF_Trend', 'PLT_Trend', 'EU_Trend']
     
     # Convert trend columns to numeric (if not already)
     trend_data = df[trend_cols].apply(pd.to_numeric, errors='coerce')
