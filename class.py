@@ -9,13 +9,14 @@ import plotly.graph_objects as go
 import plotly.express as px
 from streamlit_option_menu import option_menu
 
-filename = 'qda_model.sav'
+qda = 'qda_model.sav'
+mnb = 'mnb_model.sav'
 class_header = 'class_header.jpg'
 trend = 'Trend.csv'
 USDI = 'USDI.csv'
 
-
-qda_model = pickle.load(open(filename, 'rb'))
+qda_model = pickle.load(open(qda, 'rb'))
+mnb_model = pickle.load(open(mnb, 'rb'))
 df = pd.read_csv(USDI)
 df2 = pd.read_csv(trend)
 df['Date'] = pd.to_datetime(df['Date'])
@@ -30,8 +31,19 @@ with st.sidebar:
                            icons=['house', 'bar-chart', 'graph-up-arrow', 'search'], 
                            menu_icon="list", 
                            default_index=0)
-trend_cols = ['USB_Trend', 'OF_Trend', 'OS_Trend', 'PLD_Trend', 'SF_Trend', 'PLT_Trend', 'EU_Trend']
+    
+    model_options = option_menu("Model Selection", 
+                           ["QDA Model", "MNB Model"], 
+                           icons=['calculator', 'file-earmark-text'], 
+                           menu_icon="list", 
+                           default_index=0)
+    
 
+if model_options == "QDA Model":
+    chosen_model = qda_model
+else:
+    chosen_model = mnb_model  
+    
 if options == "Dashboard":
     # Get the latest date in the dataset
     #latest_date = df["Date"].max()
@@ -147,7 +159,7 @@ elif options == "Classification":
     # Predict button
     if st.button("Predict"):
         #prediction = qda_model.predict(input_data)
-        proba = qda_model.predict_proba(input_data)
+        proba = chosen_model.predict_proba(input_data)
 
         # Display probability for each class (0 and 1)
         proba_0 = proba[0][0]  # Probability of class 0 (Negative Trend)
@@ -321,4 +333,24 @@ elif options == "Price & Volume":
         ax3.set_xlabel("Price (USD)")
         ax3.set_ylabel("Volume")
         st.pyplot(fig3)
+
+elif options == "Correlation Matrix":
+    st.title("Correlation Matrix")
+    threshold = st.slider(
+        "Select correlation threshold", 
+        min_value=0.0, 
+        max_value=1.0, 
+        value=0.5, 
+        step=0.05, 
+        format="%.2f"
+    )
+    
+    correlation_matrix = df.corr()
+    
+    filtered_corr = correlation_matrix[correlation_matrix.abs() > threshold]
+    
+    st.write(filtered_corr)
+    plt.figure(figsize=(10, 8)) 
+    sns.heatmap(filtered_corr, annot=True, cmap='coolwarm', fmt=".2f", linewidths=0.5, cbar=True)
+    st.pyplot(plt)
 
