@@ -158,14 +158,12 @@ elif options == "Classification":
 
     # Predict button
     if st.button("Predict"):
-        #prediction = qda_model.predict(input_data)
+        st.write(chosen_model)
         proba = chosen_model.predict_proba(input_data)
 
-        # Display probability for each class (0 and 1)
         proba_0 = proba[0][0]  # Probability of class 0 (Negative Trend)
         proba_1 = proba[0][1]  # Probability of class 1 (Positive Trend)
     
-        # Display vertical progress bars using st.progress (simulate vertical bar with st.beta_container)
         col1, col2 = st.columns(2)
 
         with col1:
