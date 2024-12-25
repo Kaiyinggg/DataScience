@@ -127,7 +127,7 @@ if options == "Dashboard":
 
 elif options == "Classification":
     # Define the app
-    st.title("Binary Classification with QDA")
+    st.title("USDI Trend Prediction")
 
     image = Image.open(class_header)
     st.image(image, use_container_width=True)
