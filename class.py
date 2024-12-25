@@ -41,8 +41,10 @@ with st.sidebar:
 
 if model_options == "QDA Model":
     chosen_model = qda_model
+    name = "Quadratic Discriminant Analysis"
 else:
     chosen_model = mnb_model  
+    name = "Multinomial Naive Bayes"
     
 if options == "Dashboard":
     # Get the latest date in the dataset
@@ -158,7 +160,7 @@ elif options == "Classification":
 
     # Predict button
     if st.button("Predict"):
-        st.write(chosen_model)
+        st.write(f"Chosen Model: {name}")
         proba = chosen_model.predict_proba(input_data)
 
         proba_0 = proba[0][0]  # Probability of class 0 (Negative Trend)
