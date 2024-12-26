@@ -27,7 +27,7 @@ st.sidebar.header("Menu")
 # Sidebar stylish navigation
 with st.sidebar:
     options = option_menu("Navigation", 
-                           ["Dashboard", "Trends", "Price & Volume", "Classification"], 
+                           ["Dashboard", "Trends", "Price & Volume", "Classification", "Correlation Matrix"], 
                            icons=['house', 'bar-chart', 'graph-up-arrow', 'search'], 
                            menu_icon="list", 
                            default_index=0)
