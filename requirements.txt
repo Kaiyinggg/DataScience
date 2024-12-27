@@ -11,3 +11,6 @@ requests
 pytest
 plotly
 streamlit-option-menu
+tensorflow
+keras
+
