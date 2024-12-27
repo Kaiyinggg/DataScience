@@ -36,7 +36,7 @@ dnn_model = pickle.load(open(dnn, 'rb'))
 
 
 # Sidebar: Options for Users
-st.sidebar.header("Menu")
+st.sidebar.header("Menuuuu")
 # options = st.sidebar.radio("Choose the desired view:", ["Dashboard" ,"Classification", "Trends", "Price & Volume"])
 # Sidebar stylish navigation
 with st.sidebar:
