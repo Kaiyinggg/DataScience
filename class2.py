@@ -43,8 +43,8 @@ with st.sidebar:
     # Main Navigation Menu
     options = option_menu(
         "Navigation", 
-        ["Dashboard", "Trends", "Price & Volume", "Prediction", "Correlation Matrix"], 
-        icons=['house', 'bar-chart', 'graph-up-arrow', 'search', 'diagram-3'], 
+        ["Dashboard", "Trends", "Price & Volume","Statistics","Correlation Matrix", "Prediction"], 
+        icons=['house', 'bar-chart', 'graph-up-arrow', 'calculator', 'diagram-3', 'search'], 
         menu_icon="list", 
         default_index=0
     )
@@ -260,7 +260,7 @@ elif options == "Prediction":
     prediction_type = option_menu(
         "Prediction Type",
         ["Classification", "Regression"],
-        icons=['check-circle', 'chart-line'],
+        icons=['check-circle', 'graph-up'],
         menu_icon="list",
         default_index=0
     )
@@ -393,7 +393,67 @@ elif options == "Prediction":
 
                 # Display the prediction result
                 st.success(f"The predicted gold price is: ${predicted_price}")
-
+                
+elif options == "Statistics":
+    # Extract year from the 'Date' column and add it as a new column
+    df_final['Year'] = df_final['Date'].dt.year
+    
+    # Get the latest year from the data
+    latest_gold_year = df_final['Year'].max()
+    
+    # Title for the app
+    st.title("Commodities Summary Statistics")
+    
+    # Add a Year Selector (select a year)
+    selected_gold_year = st.selectbox(
+        "Select a Year for Commodities Analysis",
+        options=df_final['Year'].unique(),
+        index=list(df_final['Year'].unique()).index(latest_gold_year)
+    )
+    
+    # Filter the DataFrame by the selected year
+    selected_year_df = df_final[df_final['Year'] == selected_gold_year]
+    
+    # Check if there is data for the selected year
+    if not selected_year_df.empty:
+        # List of available columns for the user to select
+        available_columns = [
+            'GDX_Close', 'GDX_High', 'SF_Low', 'SF_Price', 'EG_low', 
+            'EG_open', 'PLT_Price', 'PLT_High', 'Adj Close'
+        ]
+        
+        # Allow user to select columns to display summary statistics
+        selected_columns = st.multiselect(
+            "Select Attributes to Analyze", 
+            options=available_columns,
+            default=available_columns  # Default to all columns selected
+        )
+        
+        if selected_columns:
+            # Calculate summary statistics (mean, median, max, min) for the selected columns
+            summary = selected_year_df[selected_columns].describe().T[['mean', '50%', 'max', 'min']]
+            summary.rename(columns={'50%': 'median'}, inplace=True)  # Rename 50% to median
+    
+            st.header(f"Summary Statistics for Commodities Metrics in {selected_gold_year}")
+    
+            # Display the statistics grouped by attribute
+            for col in selected_columns:
+                st.markdown(f"#### **{col}**")
+                col1, col2, col3, col4 = st.columns(4)  # Four columns: Mean, Median, Max, Min
+    
+                with col1:
+                    st.metric(label=f"{col} Mean", value=f"${summary.loc[col, 'mean']:.2f}")
+                with col2:
+                    st.metric(label=f"{col} Median", value=f"${summary.loc[col, 'median']:.2f}")
+                with col3:
+                    st.metric(label=f"{col} Max", value=f"${summary.loc[col, 'max']:.2f}")
+                with col4:
+                    st.metric(label=f"{col} Min", value=f"${summary.loc[col, 'min']:.2f}")
+    
+        else:
+            st.write("Please select at least one attribute to see the summary statistics.")
+    else:
+        st.warning(f"No data available for the year {selected_gold_year}. Please select a different year.")
       
 
 # 2. **Visualize USDI Price and Volume** 
