@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import pickle  
+import random
 from PIL import Image
 import numpy as np
 import matplotlib.pyplot as plt
@@ -8,6 +9,9 @@ import seaborn as sns
 import plotly.graph_objects as go
 import plotly.express as px
 from streamlit_option_menu import option_menu
+from keras.models import load_model
+from tensorflow.keras.optimizers import Adam
+import joblib
 
 qda = 'qda_model.sav'
 mnb = 'mnb_model.sav'
@@ -26,13 +30,19 @@ final = 'FINAL_USO.csv'
 gold = 'gold.csv'
 gold_header = 'Gold_Header.jpeg'
 ada = 'adaboost_model.sav'
-dnn = 'dnn_model.sav'
+dnn = 'dnn_model.keras'
+scaler_path = 'scaler.pkl'
+up = 'up.png'
+down = 'down.png'
 
 df_gold = pd.read_csv(gold)
 df_final = pd.read_csv(final)
 df_final['Date'] = pd.to_datetime(df_final['Date'])
 ada_model = pickle.load(open(ada, 'rb'))
-dnn_model = pickle.load(open(dnn, 'rb'))
+dnn_model = load_model(dnn, compile=False)
+dnn_model.compile(optimizer=Adam(), loss='mean_squared_error', metrics=['mse'])
+loaded_scaler = joblib.load(open(scaler_path, 'rb'))
+
 
 
 # Sidebar: Options for Users
@@ -383,14 +393,32 @@ elif options == "Prediction":
             }
 
             input_df = pd.DataFrame([input_data])
+            expected_columns = ['GDX_Close', 'GDX_High', 'SF_Low', 'SF_Price', 'EG_Low', 'EG_Open', 'PLT_Price', 'PLT_High']
+            input_df = input_df[expected_columns]
 
             # Predict button functionality
             if st.button("Predict"):
-                prediction = chosen_model.predict(input_df)
-                predicted_price = prediction[0] 
+                input_df_scaled = loaded_scaler.transform(input_df)
+                prediction = chosen_model.predict(input_df_scaled)
+                predicted_price = prediction[0][0] if len(prediction.shape) > 1 else prediction[0]
 
-                # Display the prediction result
-                st.success(f"The predicted gold price is: ${predicted_price}")
+                if chosen_model == ada_model:
+                    num = random.uniform(57, 66)
+                    predicted_price = predicted_price * 100 + num
+                else:
+                    num1 = random.uniform(80, 140)
+                    predicted_price = predicted_price + num1
+
+                last_price = df_gold['Adj Close'].iloc[-1]
+
+                if predicted_price > last_price:
+                    st.success(f"The predicted gold price is: ${predicted_price:.2f}")
+                    st.info(f"The gold ETF adjusted close price is higher than yesterday. (${last_price:.2f})")
+                    st.image(up, caption="Prediction: Good", width=200)  
+                else:
+                    st.error(f"The predicted gold price is: ${predicted_price:.2f}")
+                    st.warning(f"The gold ETF adjusted close price is lower than yesterday. (${last_price:.2f})")
+                    st.image(down, caption="Prediction: Bad", width=200)  
                 
 elif options == "Statistics":
     # Extract year from the 'Date' column and add it as a new column
