@@ -36,7 +36,7 @@ dnn_model = pickle.load(open(dnn, 'rb'))
 
 
 # Sidebar: Options for Users
-st.sidebar.header("Menuuuu")
+st.sidebar.header("Menu")
 # options = st.sidebar.radio("Choose the desired view:", ["Dashboard" ,"Classification", "Trends", "Price & Volume"])
 # Sidebar stylish navigation
 with st.sidebar:
@@ -56,7 +56,7 @@ if options == "Dashboard":
     latest_date = df["Date"].iloc[-2]
 
     # Add a Date Picker for user to select a date
-    st.title("USDI Price and Volume Metrics")
+    st.title("US Dollar Price and Volume Metrics")
     selected_date = st.date_input("Select a Date", min_value=df["Date"].min(), max_value=df["Date"].max(), value=latest_date)
 
     # Find the row for the selected date
@@ -117,14 +117,13 @@ if options == "Dashboard":
     ])
 
     fig.update_layout(
-        title="Candlestick Chart Example",
+        title="Candlestick Chart for US Dollar",
         xaxis_title="Date",
         yaxis_title="Price",
         xaxis_rangeslider_visible=False
     )
     st.markdown("<br><br>", unsafe_allow_html=True)  # Adds vertical spacing
     # Display in Streamlit
-    st.header("Candlestick Chart")
     st.plotly_chart(fig)
 
 
@@ -199,14 +198,13 @@ if options == "Dashboard":
     ])
 
     fig.update_layout(
-        title="Candlestick Chart Example",
+        title="Candlestick Chart for gold",
         xaxis_title="Date",
         yaxis_title="Price",
         xaxis_rangeslider_visible=False
     )
     st.markdown("<br><br>", unsafe_allow_html=True)  # Adds vertical spacing
     # Display in Streamlit
-    st.header("Candlestick Chart")
     st.plotly_chart(fig)
 
 elif options == "Trends":
@@ -487,12 +485,14 @@ elif options == "Price & Volume":
 
     # Apply Date Range filter if selected
     if "Date Range" in selected_filters:
+        st.write("Date Range")
         start_date = st.date_input("Select Start Date", value=df['Date'].min())
         end_date = st.date_input("Select End Date", value=df['Date'].max())
         filtered_df = filtered_df[(filtered_df['Date'] >= pd.to_datetime(start_date)) & (filtered_df['Date'] <= pd.to_datetime(end_date))]
 
     # Apply Price Range filter if selected
     if "Price Range" in selected_filters:
+        st.write("Price Range")
         min_price = st.slider("Select Minimum Price", min_value=float(df['USDI_Price'].min()), 
                             max_value=float(df['USDI_Price'].max()), 
                             value=float(df['USDI_Price'].min()))
@@ -503,6 +503,7 @@ elif options == "Price & Volume":
 
     # Apply Volume Range filter if selected
     if "Volume Range" in selected_filters:
+        st.write("Volume Range")
         min_volume = st.slider("Select Minimum Volume", min_value=int(df['USDI_Volume'].min()), 
                             max_value=int(df['USDI_Volume'].max()), 
                             value=int(df['USDI_Volume'].min()))
