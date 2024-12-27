@@ -273,7 +273,7 @@ elif options == "Prediction":
             )
 
         chosen_model = qda_model if model_options == "Quadratic Discriminant Analysis (QDA) Model" else mnb_model
-        name = "Quadratic Discriminant Analysis" if model_options == "QDA Model" else "Multinomial Naive Bayes"
+        name = "Quadratic Discriminant Analysis" if model_options == "Quadratic Discriminant Analysis (QDA) Model" else "Multinomial Naive Bayes"
         
         # Define the app
         st.title("USDI Trend Prediction")
