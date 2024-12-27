@@ -266,13 +266,13 @@ elif options == "Prediction":
     if prediction_type == "Classification":  
         model_options = option_menu(
                 "Classification Model Selection",
-                ["QDA Model", "MNB Model"],
+                ["Quadratic Discriminant Analysis (QDA) Model", "Multinomial Naive Bayes (MNB) Model"],
                 icons=['calculator', 'file-earmark-text'],
                 menu_icon="list",
                 default_index=0
             )
 
-        chosen_model = qda_model if model_options == "QDA Model" else mnb_model
+        chosen_model = qda_model if model_options == "Quadratic Discriminant Analysis (QDA) Model" else mnb_model
         name = "Quadratic Discriminant Analysis" if model_options == "QDA Model" else "Multinomial Naive Bayes"
         
         # Define the app
@@ -338,7 +338,7 @@ elif options == "Prediction":
     elif prediction_type == "Regression":
             model_options = option_menu(
                 "Regression Model Selection",
-                ["AdaBoost Model", "DNN Model"],
+                ["AdaBoost Model", " Deep Neural Networks (DNN) Model"],
                 icons=['bar-chart-line', 'layers'],
                 menu_icon="list",
                 default_index=0
