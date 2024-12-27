@@ -485,14 +485,14 @@ elif options == "Price & Volume":
 
     # Apply Date Range filter if selected
     if "Date Range" in selected_filters:
-        st.write("Date Range")
+        st.subheader("Date Range")
         start_date = st.date_input("Select Start Date", value=df['Date'].min())
         end_date = st.date_input("Select End Date", value=df['Date'].max())
         filtered_df = filtered_df[(filtered_df['Date'] >= pd.to_datetime(start_date)) & (filtered_df['Date'] <= pd.to_datetime(end_date))]
 
     # Apply Price Range filter if selected
     if "Price Range" in selected_filters:
-        st.write("Price Range")
+        st.subheader("Price Range")
         min_price = st.slider("Select Minimum Price", min_value=float(df['USDI_Price'].min()), 
                             max_value=float(df['USDI_Price'].max()), 
                             value=float(df['USDI_Price'].min()))
@@ -503,7 +503,7 @@ elif options == "Price & Volume":
 
     # Apply Volume Range filter if selected
     if "Volume Range" in selected_filters:
-        st.write("Volume Range")
+        st.subheader("Volume Range")
         min_volume = st.slider("Select Minimum Volume", min_value=int(df['USDI_Volume'].min()), 
                             max_value=int(df['USDI_Volume'].max()), 
                             value=int(df['USDI_Volume'].min()))
