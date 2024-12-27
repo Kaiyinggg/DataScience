@@ -9,11 +9,11 @@ import plotly.graph_objects as go
 import plotly.express as px
 from streamlit_option_menu import option_menu
 
-qda = 'C:\\Users\\User\\Downloads\\DS\\DS\\qda_model.sav'
-mnb = 'C:\\Users\\User\\Downloads\\DS\\DS\\mnb_model.sav'
-class_header = 'C:\\Users\\User\\Downloads\\DS\\DS\\class_header.jpg'
-trend = 'C:\\Users\\User\\Downloads\\DS\\DS\\Trend.csv'
-USDI = 'C:\\Users\\User\\Downloads\\DS\\DS\\USDI.csv'
+qda = 'qda_model.sav'
+mnb = 'mnb_model.sav'
+class_header = 'class_header.jpg'
+trend = 'Trend.csv'
+USDI = 'USDI.csv'
 
 qda_model = pickle.load(open(qda, 'rb'))
 mnb_model = pickle.load(open(mnb, 'rb'))
@@ -22,11 +22,11 @@ df2 = pd.read_csv(trend)
 df['Date'] = pd.to_datetime(df['Date'])
 
 
-final = 'C:\\Users\\User\\Downloads\\DS\\DS\\FINAL_USO.csv'
-gold = 'C:\\Users\\User\\Downloads\\DS\\DS\\gold.csv'
-gold_header = 'C:\\Users\\User\\Downloads\\DS\\DS\\Gold_Header.jpeg'
-ada = 'C:\\Users\\User\\Downloads\\DS\\DS\\adaboost_model.sav'
-dnn = 'C:\\Users\\User\\Downloads\\DS\\DS\\dnn_model.sav'
+final = 'FINAL_USO.csv'
+gold = 'gold.csv'
+gold_header = 'Gold_Header.jpeg'
+ada = 'adaboost_model.sav'
+dnn = 'dnn_model.sav'
 
 df_gold = pd.read_csv(gold)
 df_final = pd.read_csv(final)
